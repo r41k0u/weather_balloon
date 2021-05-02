@@ -1,0 +1,92 @@
+#include<LiquidCrystal.h>
+int ModerateTemp = 0;
+int GasValue = 0;
+int buzzer = 9;
+LiquidCrystal lcd (12,11,5,4,3,2);
+void setup()
+{
+  pinMode(6, OUTPUT);
+  pinMode(7, OUTPUT);
+  pinMode(8, OUTPUT);
+  pinMode(9, OUTPUT);
+  pinMode(A0, INPUT);
+  pinMode(A1, INPUT);
+  Serial.begin(9600);
+  lcd.begin(20,4);
+}
+
+void loop()
+{
+  Gas();
+  tmp();
+
+}
+void Gas()
+{
+  GasValue = analogRead(A0);
+  Serial.print("in m^3");
+  Serial.println(GasValue);
+  if(GasValue >85)
+  {
+    digitalWrite(buzzer,HIGH);
+    delay(1000);
+    digitalWrite(buzzer,LOW);
+  }
+}
+void tmp()
+{
+  
+  ModerateTemp =40;
+  float degreeC;
+  degreeC = map(((analogRead(A1)-20)*3.04),0,1023,-40,125);
+  Serial.print("in C");
+  Serial.print(degreeC);
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Weather Balloon");
+  lcd.setCursor(0,1);
+  lcd.print("Team");
+  delay(3000);
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Temperature:");
+  lcd.setCursor(0,1);
+  lcd.print(degreeC);
+  delay(2000);
+  if(degreeC < ModerateTemp)
+  {
+    digitalWrite(6,HIGH);
+    digitalWrite(7,LOW);
+    digitalWrite(8,LOW);
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Temperature is");
+    lcd.setCursor(0,1);
+    lcd.print("LOW");
+    delay(2000);
+  }
+  if(degreeC == ModerateTemp)
+  {
+    digitalWrite(6,LOW);
+    digitalWrite(7,HIGH);
+    digitalWrite(8,LOW);
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Temperature is");
+    lcd.setCursor(0,1);
+    lcd.print("Moderate");
+    delay(2000);
+  }
+if(degreeC > ModerateTemp)
+  {
+    digitalWrite(6,LOW);
+    digitalWrite(7,LOW);
+    digitalWrite(8,HIGH);
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Temperature is");
+    lcd.setCursor(0,1);
+    lcd.print("HIGH");
+    delay(2000);
+  }
+}
