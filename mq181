@@ -1,0 +1,15 @@
+#include <MQ131.h>
+
+void setup() {
+    Serial.begin(115200);
+    MQ131.begin(2,A0, LOW_CONCENTRATION, 1000000);
+    //heating output, sensor analog input, model type, resistance
+    MQ131.calibrate();
+}
+void loop() {
+    MQ131.sample();
+    Serial.print("Concentration O3 : ");
+    Serial.print(MQ131.getO3(PPM));
+    Serial.println(" ppm");
+    delay(5000);
+}
